@@ -1,6 +1,8 @@
+%define debug_package %{nil}
+
 Name:          mesos-dns
 Version:       0.1.2
-Release:       1
+Release:       0%{?dist}
 Summary:       DNS-based service discovery for Apache Mesos.
 License:       ASL 2.0
 URL:           http://mesosphere.github.io/mesos-dns/
@@ -10,9 +12,8 @@ Source1:       %{name}.service
 
 ####################################
 
-BuildRequires: systemd
-BuildRequires: golang
-
+BuildRequires: golang >= 1.4
+BuildRequires: git
 
 %description
 Mesos-DNS supports service discovery in Apache Mesos clusters.
@@ -26,24 +27,35 @@ each other throughout the Internet.
 %setup -q -n %{name}-%{version}
 
 %build
-#todo
+mkdir -p ./_build/src/github.com/mesosphere
+ln -s $(pwd) ./_build/src/github.com/mesosphere/mesos-dns
+
+export GOPATH=$(pwd)/_build:%{gopath}
+go get github.com/tools/godep
+pushd ./_build/src/github.com/tools/godep
+go build -o godep
+popd
+export PATH="$(pwd)/_build/src/github.com/tools/godep:$PATH"
+make restoredeps
+make build
 
 %check
-#todo
 
 %install
-#todo
+install -d %{buildroot}%{_sbindir}
+install -p -m 0755 ./mesos-dns %{buildroot}%{_sbindir}/mesos-dns
 
-# system integration sysconfig setting
+mkdir -p %{buildroot}%{_unitdir}
+install -m 0644 %{SOURCE1} %{buildroot}%{_unitdir}/
+
 mkdir -p %{buildroot}%{_sysconfdir}/%{name}
-
+install -m 0644 ./config.json.sample %{buildroot}%{_sysconfdir}/%{name}/config.json
 
 ############################################
 %files
-%doc LICENSE NOTICE
-%{_sbindir}/mesos-*
-#system integration files
-%config(noreplace) %{_sysconfdir}/sysconfig/%{name}*
+%doc LICENSE README.md
+%{_sbindir}/mesos-dns
+%config(noreplace) %{_sysconfdir}/%{name}/config.json
 %{_unitdir}/%{name}.service
 
 %pre
