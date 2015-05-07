@@ -3,7 +3,7 @@
 Name:          mesos-dns
 Version:       0.1.2
 Release:       0%{?dist}
-Summary:       DNS-based service discovery for Apache Mesos.
+Summary:       DNS-based service discovery for Apache Mesos
 License:       ASL 2.0
 URL:           http://mesosphere.github.io/mesos-dns/
 
@@ -14,6 +14,7 @@ Source1:       %{name}.service
 
 BuildRequires: golang >= 1.4
 BuildRequires: git
+BuildRequires: systemd-units
 
 %description
 Mesos-DNS supports service discovery in Apache Mesos clusters.
@@ -38,6 +39,7 @@ popd
 export PATH="$(pwd)/_build/src/github.com/tools/godep:$PATH"
 make restoredeps
 make build
+strip mesos-dns
 
 %check
 
@@ -70,5 +72,5 @@ install -m 0644 ./config.json.sample %{buildroot}%{_sysconfdir}/%{name}/config.j
 %systemd_postun_with_restart %{name}.service
 
 %changelog
-* Wed May  6 2015 Lukas Loesche <lukas@mesosphere.io> - 0.1.2-0.1
+* Wed May  6 2015 Lukas Loesche <lukas@mesosphere.io> - 0.1.2-0
 - Initial release
