@@ -1,7 +1,7 @@
 %define debug_package %{nil}
 
 Name:          mesos-dns
-Version:       0.1.2
+Version:       0.4.0
 Release:       0%{?dist}
 Summary:       DNS-based service discovery for Apache Mesos
 License:       ASL 2.0
@@ -37,8 +37,8 @@ pushd ./_build/src/github.com/tools/godep
 go build -o godep
 popd
 export PATH="$(pwd)/_build/src/github.com/tools/godep:$PATH"
-make restoredeps
-make build
+godep restore
+godep go build -o mesos-dns
 strip mesos-dns
 
 %check
