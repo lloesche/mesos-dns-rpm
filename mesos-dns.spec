@@ -1,7 +1,7 @@
 %define debug_package %{nil}
 
 Name:          mesos-dns
-Version:       0.4.0
+Version:       0.5.1
 Release:       0%{?dist}
 Summary:       DNS-based service discovery for Apache Mesos
 License:       ASL 2.0
@@ -72,5 +72,8 @@ install -m 0644 ./config.json.sample %{buildroot}%{_sysconfdir}/%{name}/config.j
 %systemd_postun_with_restart %{name}.service
 
 %changelog
-* Wed May  6 2015 Lukas Loesche <lukas@mesosphere.io> - 0.1.2-0
+* Sat Nov 28 2015 Lukas Loesche <lloesche@fedoraproject.org> - 0.5.1-0
+- bump to mesos-dns 0.5.1
+
+* Wed May  6 2015 Lukas Loesche <lloesche@fedoraproject.org> - 0.1.2-0
 - Initial release

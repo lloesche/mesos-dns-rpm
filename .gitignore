@@ -1,0 +1,4 @@
+*.gz
+*.rpm
+*.log
+/mesos-dns-*/
